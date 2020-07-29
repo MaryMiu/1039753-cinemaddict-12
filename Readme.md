@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Мария Орлова](https://up.htmlacademy.ru/ecmascript/12/user/1039753).
-* Наставник: `Неизвестно`.
+* Наставник: [Данила Маношкин](https://up.htmlacademy.ru/ecmascript/12/user/1197595).
 
 ---
 
