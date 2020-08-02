@@ -125,7 +125,7 @@ let createStatistics = () => {
 
 let render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
-}
+};
 
 let siteHeader = document.querySelector(`.header`);
 let siteMain = document.querySelector(`.main`);
@@ -155,7 +155,7 @@ filmListsExtra.forEach((item) => {
   let filmContainerExtra = item.querySelector(`.films-list__container`);
   for (let i = 0; i < FILM_COUNT_EXTRA; i++) {
     render(filmContainerExtra, `beforeend`, createFilmCardExtra());
-  };
+  }
 });
 
 let statistics = document.querySelector(`.footer__statistics`);
