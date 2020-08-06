@@ -1,4 +1,4 @@
-export let createFilmCardExtra = () => {
+export const createFilmCardExtra = () => {
   return (
     `<article class="film-card">
       <h3 class="film-card__title">The Man with the Golden Arm</h3>

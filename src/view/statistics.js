@@ -1,4 +1,4 @@
-export let createStatistics = () => {
+export const createStatistics = () => {
   return (
     `<p>130 291 movies inside</p>`
   );

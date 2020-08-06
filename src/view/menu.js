@@ -1,4 +1,4 @@
-export let creareSiteMenu = () => {
+export const creareSiteMenu = () => {
   return (
     `<nav class="main-navigation">
   <div class="main-navigation__items">

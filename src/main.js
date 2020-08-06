@@ -13,21 +13,21 @@ import {createFilmListExtra} from "./view/list-extra.js";
 import {createFilmCardExtra} from "./view/card-extra.js";
 import {createStatistics} from "./view/statistics.js";
 
-let render = (container, position, template) => {
+const render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
 };
 
-let siteHeader = document.querySelector(`.header`);
-let siteMain = document.querySelector(`.main`);
+const siteHeader = document.querySelector(`.header`);
+const siteMain = document.querySelector(`.main`);
 
 render(siteHeader, `beforeend`, createUserBar());
 render(siteMain, `beforeend`, creareSiteMenu());
 render(siteMain, `beforeend`, createSort());
 render(siteMain, `beforeend`, createFilmContainer());
 
-let films = siteMain.querySelector(`.films`);
-let filmList = films.querySelector(`.films-list`);
-let filmContainer = filmList.querySelector(`.films-list__container`);
+const films = siteMain.querySelector(`.films`);
+const filmList = films.querySelector(`.films-list`);
+const filmContainer = filmList.querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_COUNT; i++) {
   render(filmContainer, `beforeend`, createFilmCard());
@@ -39,15 +39,15 @@ for (let i = 0; i < EXTRA_COUNT; i++) {
   render(films, `beforeend`, createFilmListExtra());
 }
 
-let filmListsExtra = siteMain.querySelectorAll(`.films-list--extra`);
+const filmListsExtra = siteMain.querySelectorAll(`.films-list--extra`);
 
 filmListsExtra.forEach((item) => {
-  let filmContainerExtra = item.querySelector(`.films-list__container`);
+  const filmContainerExtra = item.querySelector(`.films-list__container`);
   for (let i = 0; i < FILM_COUNT_EXTRA; i++) {
     render(filmContainerExtra, `beforeend`, createFilmCardExtra());
   }
 });
 
-let statistics = document.querySelector(`.footer__statistics`);
+const statistics = document.querySelector(`.footer__statistics`);
 
 render(statistics, `beforeend`, createStatistics());
