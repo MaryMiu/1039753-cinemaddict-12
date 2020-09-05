@@ -1,5 +1,12 @@
-export const createStatistics = () => {
+import {
+  groupNumber
+} from "../utils.js";
+
+export const createStatistics = (number) => {
+
+  const formatNumber = groupNumber(number);
+
   return (
-    `<p>130 291 movies inside</p>`
+    `<p>${formatNumber} movies inside</p>`
   );
 };
