@@ -1,3 +1,7 @@
+import {
+  createElement
+} from "../utils.js";
+
 const createFilterItemTemplate = (filter) => {
   const {
     title,
@@ -10,7 +14,7 @@ const createFilterItemTemplate = (filter) => {
 };
 
 
-export const createFilter = (filters) => {
+const createFilter = (filters) => {
   const filterItemsTemplate = filters
     .filter((filter) => filter.title !== `all`).map((filter) => createFilterItemTemplate(filter))
     .join(``);
@@ -20,3 +24,26 @@ export const createFilter = (filters) => {
     ${filterItemsTemplate}
     </div>`;
 };
+
+export default class Filter {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilter(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

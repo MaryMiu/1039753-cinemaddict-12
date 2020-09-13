@@ -1,3 +1,7 @@
+import {
+  createElement
+} from "../utils.js";
+
 const checkProfileName = (number) => {
   if (number === 0) {
     return ``;
@@ -10,7 +14,7 @@ const checkProfileName = (number) => {
   }
 };
 
-export const createUserBar = (filters) => {
+const createUserBar = (filters) => {
   const watchlistArray = filters.filter((filter) => filter.title === `Watchlist`);
   const profileName = checkProfileName(watchlistArray[0].count);
 
@@ -21,3 +25,26 @@ export const createUserBar = (filters) => {
   </section>
   `);
 };
+
+export default class UserBar {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserBar(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

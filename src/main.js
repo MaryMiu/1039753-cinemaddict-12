@@ -5,24 +5,12 @@ const TASK_COUNT = 15;
 const CARDS_COUNT_PER_STEP = 5;
 const ENTER = `Enter`;
 
-import {
-  createUserBar
-} from "./view/user.js";
-import {
-  createSiteMenu
-} from "./view/menu.js";
-import {
-  createFilter
-} from "./view/filter.js";
-import {
-  createSort
-} from "./view/sort.js";
-import {
-  createFilmContainer
-} from "./view/container.js";
-import {
-  createFilmCard
-} from "./view/card.js";
+import UserBar from "./view/user.js";
+import SiteMenuView from "./view/menu.js";
+import FilterView from "./view/filter.js";
+import SortView from "./view/sort.js";
+import FilmContainerView from "./view/container.js";
+import FilmCard from "./view/card.js";
 import {
   createLoadButton
 } from "./view/load-button.js";
@@ -56,37 +44,37 @@ import {
 import {
   generateFilter
 } from "./mock/filter.js";
+import {
+  renderTemplate,
+  renderElement,
+  renderPosition
+} from "./utils.js";
 
 const cards = new Array(TASK_COUNT).fill().map(generateCard);
 const filters = generateFilter(cards);
-
-const render = (container, position, template) => {
-  container.insertAdjacentHTML(position, template);
-};
-
 const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
 
-render(siteHeader, `beforeend`, createUserBar(filters));
-render(siteMain, `beforeend`, createSiteMenu());
+renderElement(siteHeader, new UserBar(filters).getElement(), `beforeend`);
+renderElement(siteMain, new SiteMenuView().getElement(), `beforeend`);
 
 const siteNavigation = document.querySelector(`.main-navigation`);
 
-render(siteNavigation, `afterbegin`, createFilter(filters));
-render(siteMain, `beforeend`, createSort());
-render(siteMain, `beforeend`, createFilmContainer());
+renderElement(siteNavigation, new FilterView(filters).getElement(), `afterbegin`);
+renderElement(siteMain, new SortView().getElement(), `beforeend`);
+renderElement(siteMain, new FilmContainerView().getElement(), `beforeend`);
 
 const films = siteMain.querySelector(`.films`);
 const filmList = films.querySelector(`.films-list`);
 const filmContainer = filmList.querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_COUNT; i++) {
-  render(filmContainer, `beforeend`, createFilmCard(cards[i]));
+  renderElement(filmContainer, new FilmCard(cards[i]).getElement(), `beforeend`);
 }
 
 for (let i = 0; i < EXTRA_COUNT; i++) {
-  render(films, `beforeend`, createFilmListExtra());
+  renderTemplate(films, createFilmListExtra(), `beforeend`);
 }
 
 let filmCardsExtra = ``;
@@ -99,17 +87,17 @@ const filmListsExtra = siteMain.querySelectorAll(`.films-list--extra`);
 
 filmListsExtra.forEach((item) => {
   const filmContainerExtra = item.querySelector(`.films-list__container`);
-  render(filmContainerExtra, `beforeend`, filmCardsExtra);
+  renderTemplate(filmContainerExtra, filmCardsExtra, `beforeend`);
 });
 
 const statistics = document.querySelector(`.footer__statistics`);
 const filmCount = createNumberOfFilms();
 
-render(statistics, `beforeend`, createStatistics(filmCount));
+renderTemplate(statistics, createStatistics(filmCount), `beforeend`);
 
 if (cards.length > CARDS_COUNT_PER_STEP) {
   let renderedCardsCount = CARDS_COUNT_PER_STEP;
-  render(filmList, `beforeend`, createLoadButton());
+  renderTemplate(filmList, createLoadButton(), `beforeend`);
 
   const loadMoreButton = filmList.querySelector(`.films-list__show-more`);
 
@@ -118,9 +106,9 @@ if (cards.length > CARDS_COUNT_PER_STEP) {
     evt.preventDefault();
     cards
       .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
-      .forEach((card) => (renderedCardsPerStep += createFilmCard(card)));
+      .forEach((card) => (renderedCardsPerStep += new FilmCard(card).getElement()));
 
-    render(filmContainer, `beforeend`, renderedCardsPerStep);
+    renderTemplate(filmContainer, renderedCardsPerStep, `beforeend`);
 
     renderedCardsCount += CARDS_COUNT_PER_STEP;
 
@@ -138,18 +126,18 @@ function filmsClickHandler(evt) {
   if (isPopupTarget(evt)) {
     const card = evt.target.closest(`.film-card`);
     const index = Array.from(filmContainer.children).indexOf(card);
-    render(siteFooter, `afterend`, createPopup(cards[index]));
+    renderTemplate(siteFooter, createPopup(cards[index]), `afterend`);
 
     const cardClose = document.querySelector(`.film-details__close-btn`);
     cardClose.addEventListener(`click`, cardCloseCloseHandler);
     document.addEventListener(`keydown`, cardCloseKeydownHandler);
 
     const cardDetailsContainer = document.querySelector(`.form-details__top-container`);
-    render(cardDetailsContainer, `beforeend`, createCommentContainer(cards[index]));
+    renderTemplate(cardDetailsContainer, createCommentContainer(cards[index]), `beforeend`);
 
     const cardDetailsList = document.querySelector(`.film-details__comments-wrap`);
-    render(cardDetailsList, `beforeend`, createCommentList(cards[index]));
-    render(cardDetailsList, `beforeend`, createCommentNew(cards[index]));
+    renderTemplate(cardDetailsList, createCommentList(cards[index]), `beforeend`);
+    renderTemplate(cardDetailsList, createCommentNew(cards[index]), `beforeend`);
 
     const emojilList = document.querySelector(`.film-details__emoji-list`);
     emojilList.addEventListener(`change`, emojilListChangeHandler);
@@ -223,4 +211,3 @@ function formFilmInnerSubmitHandler(evt) {
     form.submit();
   }
 }
-

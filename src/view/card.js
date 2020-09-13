@@ -1,6 +1,10 @@
+import {
+  createElement
+} from "../utils.js";
+
 const MAX_SYMBOL_COUNT = 140;
 
-export const createFilmCard = (card) => {
+const createFilmCard = (card) => {
   const {
     img,
     title,
@@ -46,3 +50,25 @@ export const createFilmCard = (card) => {
   </article>`
   );
 };
+export default class FilmCard {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCard(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
