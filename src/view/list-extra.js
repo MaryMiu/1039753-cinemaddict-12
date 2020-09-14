@@ -1,4 +1,8 @@
-export const createFilmListExtra = () => {
+import {
+  createElement
+} from "../utils.js";
+
+const createFilmListExtra = () => {
   return (
     `<section class="films-list--extra">
       <h2 class="films-list__title">Top rated</h2>
@@ -8,3 +12,24 @@ export const createFilmListExtra = () => {
   </section>`
   );
 };
+export default class FilmListExtra {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmListExtra();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

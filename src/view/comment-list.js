@@ -1,8 +1,9 @@
 import {
+  createElement,
   humanizePopupReleaseDate
 } from "../utils.js";
 
-export const createCommentList = (card) => {
+const createCommentList = (card) => {
   const {
     comments
   } = card;
@@ -48,3 +49,26 @@ export const createCommentList = (card) => {
   </ul>`
   );
 };
+
+export default class CommentList {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCommentList(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

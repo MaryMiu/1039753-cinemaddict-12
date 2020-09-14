@@ -1,4 +1,5 @@
 import {
+  createElement,
   humanizeCardReleaseDate
 } from "../utils.js";
 
@@ -6,7 +7,7 @@ const createGenresListTemplate = (genres) => {
   return genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``);
 };
 
-export const createPopup = (card) => {
+const createPopup = (card) => {
   const {
     img,
     title,
@@ -112,4 +113,27 @@ export const createPopup = (card) => {
   </section>`
   );
 };
+
+export default class Popup {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopup(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
