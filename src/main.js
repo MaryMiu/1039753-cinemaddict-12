@@ -1,7 +1,6 @@
-const FILM_COUNT = 5;
-const TASK_COUNT = 15;
+const FILM_COUNT = 15;
 const CARDS_COUNT_PER_STEP = 5;
-const ENTER = `Enter`;
+const cards = new Array(FILM_COUNT).fill().map(generateCard);
 
 import UserBar from "./view/user.js";
 import SiteMenuView from "./view/menu.js";
@@ -29,8 +28,8 @@ import {
   renderPosition
 } from "./utils.js";
 
-const cards = new Array(TASK_COUNT).fill().map(generateCard);
 const filters = generateFilter(cards);
+
 const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
@@ -41,136 +40,93 @@ render(siteMain, new SiteMenuView().getElement(), renderPosition.BEFOREEND);
 const siteNavigation = document.querySelector(`.main-navigation`);
 
 render(siteNavigation, new FilterView(filters).getElement(), `afterbegin`);
-render(siteMain, new SortView().getElement(), renderPosition.BEFOREEND);
-render(siteMain, new FilmContainerView().getElement(), renderPosition.BEFOREEND);
 
-const films = siteMain.querySelector(`.films`);
-const filmList = films.querySelector(`.films-list`);
-const filmContainer = filmList.querySelector(`.films-list__container`);
+const renderCard = (cardListElement, card) => {
+  const cardComponent = new FilmCardView(card);
+  const popupComponent = new PopupView(card);
 
-for (let i = 0; i < FILM_COUNT; i++) {
-  render(filmContainer, new FilmCardView(cards[i]).getElement(), renderPosition.BEFOREEND);
-}
+  const showPopup = () => {
+    document.body.appendChild(popupComponent.getElement());
+  };
 
-const statistics = document.querySelector(`.footer__statistics`);
+  const removePopup = () => {
+    document.body.removeChild(popupComponent.getElement());
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      removePopup();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  const cardSelectors = [`.film-card__poster`, `.film-card__title`, `.film-card__comments`];
+  const cardElements = cardSelectors.map((element) => {
+    return cardComponent.getElement().querySelector(element);
+  });
+
+  const popupDetailsContainer = popupComponent.getElement().querySelector(`.form-details__top-container`);
+  render(popupDetailsContainer, new CommentContainerView(card).getElement(), renderPosition.BEFOREEND);
+
+  const popupDetailsList = popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
+  render(popupDetailsList, new CommentListView(card).getElement(), renderPosition.BEFOREEND);
+  render(popupDetailsList, new CommentNewView(card).getElement(), renderPosition.BEFOREEND);
+
+  cardElements.forEach((element) => {
+    element.addEventListener(`click`, () => {
+      showPopup();
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+  });
+
+  popupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    removePopup();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+  render(cardListElement, cardComponent.getElement(), renderPosition.BEFOREEND);
+};
+
+const renderList = (listContainer, listCards) => {
+  const filmComponent = new FilmContainerView();
+
+  render(siteMain, filmComponent.getElement(), renderPosition.BEFOREEND);
+  render(siteMain, new SortView().getElement(), renderPosition.BEFOREEND);
+
+  const filmList = listContainer.querySelector(`.films-list`);
+  const filmContainer = filmList.querySelector(`.films-list__container`);
+
+  listCards
+    .slice(0, Math.min(cards.length, CARDS_COUNT_PER_STEP))
+    .forEach((listCard) => renderCard(filmContainer, listCard));
+
+  if (listCards.length > CARDS_COUNT_PER_STEP) {
+    let renderedCardsCount = CARDS_COUNT_PER_STEP;
+
+    const loadMoreButton = new LoadButtonView();
+    render(filmList, loadMoreButton.getElement(), renderPosition.BEFOREEND);
+
+    loadMoreButton.getElement().addEventListener(`click`, (evt) => {
+
+      evt.preventDefault();
+      listCards
+        .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
+        .forEach((listCard) => renderCard(filmContainer, listCard));
+      renderedCardsCount += CARDS_COUNT_PER_STEP;
+
+      if (renderedCardsCount >= listCards.length) {
+        loadMoreButton.getElement().remove();
+        loadMoreButton.removeElement();
+      }
+    });
+  }
+};
+
+renderList(siteMain, cards);
+
+const statistics = siteFooter.querySelector(`.footer__statistics`);
 const filmCount = createNumberOfFilms();
 
 render(statistics, new StatisticsView(filmCount).getElement(), renderPosition.BEFOREEND);
-
-if (cards.length > CARDS_COUNT_PER_STEP) {
-  let renderedCardsCount = CARDS_COUNT_PER_STEP;
-  render(filmList, new LoadButtonView().getElement(), renderPosition.BEFOREEND);
-
-  const loadMoreButton = filmList.querySelector(`.films-list__show-more`);
-
-  loadMoreButton.addEventListener(`click`, (evt) => {
-    let renderedCardsPerStep = document.createDocumentFragment();
-
-    evt.preventDefault();
-    cards
-      .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
-      .forEach((card) => (renderedCardsPerStep.append(new FilmCardView(card).getElement())));
-
-    render(filmContainer, renderedCardsPerStep, renderPosition.BEFOREEND);
-
-    renderedCardsCount += CARDS_COUNT_PER_STEP;
-
-    if (renderedCardsCount >= cards.length) {
-      loadMoreButton.remove();
-    }
-  });
-}
-
-filmList.addEventListener(`click`, filmsClickHandler);
-
-const ESC_KEY = `Escape`;
-
-function filmsClickHandler(evt) {
-  if (isPopupTarget(evt)) {
-    const card = evt.target.closest(`.film-card`);
-    const index = Array.from(filmContainer.children).indexOf(card);
-    render(siteFooter, new PopupView(cards[index]).getElement(), renderPosition.BEFOREEND);
-
-    const cardClose = document.querySelector(`.film-details__close-btn`);
-    cardClose.addEventListener(`click`, cardCloseCloseHandler);
-    document.addEventListener(`keydown`, cardCloseKeydownHandler);
-
-    const cardDetailsContainer = document.querySelector(`.form-details__top-container`);
-    render(cardDetailsContainer, new CommentContainerView(cards[index]).getElement(), renderPosition.BEFOREEND);
-
-    const cardDetailsList = document.querySelector(`.film-details__comments-wrap`);
-    render(cardDetailsList, new CommentListView(cards[index]).getElement(), renderPosition.BEFOREEND);
-    render(cardDetailsList, new CommentNewView(cards[index]).getElement(), renderPosition.BEFOREEND);
-
-    const emojilList = document.querySelector(`.film-details__emoji-list`);
-    emojilList.addEventListener(`change`, emojilListChangeHandler);
-
-    const commentsList = document.querySelector(`.film-details__comments-list`);
-    commentsList.addEventListener(`click`, commentsListClickHandler);
-
-    const formFilmInner = document.querySelector(`.film-details__inner`);
-    formFilmInner.addEventListener(`keydown`, formFilmInnerSubmitHandler);
-
-  } else {
-    return;
-  }
-}
-
-const isPopupTarget = (evt) => evt.target.classList.contains(`film-card__poster`) || evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__comments`);
-
-function removePopupAndHandler(evt) {
-  let cardDetails = document.querySelector(`.film-details`);
-  cardDetails.remove();
-  evt.target.removeEventListener(`click`, cardCloseCloseHandler);
-  document.removeEventListener(`keydown`, cardCloseKeydownHandler);
-}
-
-function cardCloseCloseHandler(evt) {
-  removePopupAndHandler(evt);
-}
-
-function cardCloseKeydownHandler(evt) {
-  if (evt.key === ESC_KEY) {
-    removePopupAndHandler(evt);
-  }
-}
-
-function emojilListChangeHandler(evt) {
-  if (isEmojiTarget(evt)) {
-    const emoji = evt.target.value;
-    const image = createImage(emoji);
-    insertEmoji(image);
-  }
-}
-
-function createImage(emoji) {
-  return `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`;
-}
-
-function insertEmoji(elem) {
-  const emojiContainer = document.querySelector(`.film-details__add-emoji-label`);
-  emojiContainer.innerHTML = elem;
-}
-
-const isEmojiTarget = (evt) => evt.target && evt.target.matches(`input[type="radio"]`);
-
-function commentsListClickHandler(evt) {
-  if (isDeleteButton(evt)) {
-    evt.preventDefault();
-    const comment = evt.target.closest(`.film-details__comment`);
-    comment.remove();
-  } else {
-    return;
-  }
-}
-
-const isDeleteButton = (evt) => evt.target.classList.contains(`film-details__comment-delete`);
-
-function formFilmInnerSubmitHandler(evt) {
-  if (evt.key === ENTER && evt.ctrlKey) {
-    const form = evt.currentTarget;
-    const formText = form.querySelector(`.film-details__comment-input`);
-    formText.value = escape(formText.value);
-    form.submit();
-  }
-}
