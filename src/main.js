@@ -1,6 +1,4 @@
 const FILM_COUNT = 5;
-const EXTRA_COUNT = 2;
-const FILM_COUNT_EXTRA = 2;
 const TASK_COUNT = 15;
 const CARDS_COUNT_PER_STEP = 5;
 const ENTER = `Enter`;
@@ -12,10 +10,6 @@ import SortView from "./view/sort.js";
 import FilmContainerView from "./view/container.js";
 import FilmCardView from "./view/card.js";
 import LoadButtonView from "./view/load-button.js";
-import FilmListExtraView from "./view/list-extra.js";
-import {
-  createFilmCardExtra
-} from "./view/card-extra.js";
 import StatisticsView from "./view/statistics.js";
 import {
   generateCard
@@ -31,7 +25,6 @@ import {
   generateFilter
 } from "./mock/filter.js";
 import {
-  renderTemplate,
   render,
   renderPosition
 } from "./utils.js";
@@ -58,23 +51,6 @@ const filmContainer = filmList.querySelector(`.films-list__container`);
 for (let i = 0; i < FILM_COUNT; i++) {
   render(filmContainer, new FilmCardView(cards[i]).getElement(), renderPosition.BEFOREEND);
 }
-
-for (let i = 0; i < EXTRA_COUNT; i++) {
-  render(films, new FilmListExtraView().getElement(), renderPosition.BEFOREEND);
-}
-
-let filmCardsExtra = ``;
-
-for (let i = 0; i < FILM_COUNT_EXTRA; i++) {
-  filmCardsExtra += createFilmCardExtra();
-}
-
-const filmListsExtra = siteMain.querySelectorAll(`.films-list--extra`);
-
-filmListsExtra.forEach((item) => {
-  const filmContainerExtra = item.querySelector(`.films-list__container`);
-  renderTemplate(filmContainerExtra, filmCardsExtra, renderPosition.BEFOREEND);
-});
 
 const statistics = document.querySelector(`.footer__statistics`);
 const filmCount = createNumberOfFilms();
