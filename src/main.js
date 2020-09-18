@@ -6,6 +6,8 @@ import UserBar from "./view/user.js";
 import SiteMenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
 import SortView from "./view/sort.js";
+import FilmListView from "./view/list.js";
+import FilmTitleView from "./view/title.js";
 import FilmContainerView from "./view/container.js";
 import FilmCardView from "./view/card.js";
 import LoadButtonView from "./view/load-button.js";
@@ -90,17 +92,21 @@ const renderCard = (cardListElement, card) => {
 };
 
 const renderList = (listContainer, listCards) => {
-  const filmComponent = new FilmContainerView();
+  const filmComponent = new FilmListView();
+  const filmTitle = new FilmTitleView();
+  const filmContainer = new FilmContainerView();
 
-  render(siteMain, filmComponent.getElement(), renderPosition.BEFOREEND);
-  render(siteMain, new SortView().getElement(), renderPosition.BEFOREEND);
+  render(listContainer, new SortView().getElement(), renderPosition.BEFOREEND);
+  render(listContainer, filmComponent.getElement(), renderPosition.BEFOREEND);
 
-  const filmList = listContainer.querySelector(`.films-list`);
-  const filmContainer = filmList.querySelector(`.films-list__container`);
+  const filmList = filmComponent.getElement().querySelector(`.films-list`);
+
+  render(filmList, filmTitle.getElement(), renderPosition.BEFOREEND);
+  render(filmList, filmContainer.getElement(), renderPosition.BEFOREEND);
 
   listCards
     .slice(0, Math.min(cards.length, CARDS_COUNT_PER_STEP))
-    .forEach((listCard) => renderCard(filmContainer, listCard));
+    .forEach((listCard) => renderCard(filmContainer.getElement(), listCard));
 
   if (listCards.length > CARDS_COUNT_PER_STEP) {
     let renderedCardsCount = CARDS_COUNT_PER_STEP;
@@ -113,7 +119,7 @@ const renderList = (listContainer, listCards) => {
       evt.preventDefault();
       listCards
         .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
-        .forEach((listCard) => renderCard(filmContainer, listCard));
+        .forEach((listCard) => renderCard(filmContainer.getElement(), listCard));
       renderedCardsCount += CARDS_COUNT_PER_STEP;
 
       if (renderedCardsCount >= listCards.length) {
