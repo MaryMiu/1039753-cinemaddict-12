@@ -8,6 +8,7 @@ import FilterView from "./view/filter.js";
 import SortView from "./view/sort.js";
 import FilmListView from "./view/list.js";
 import FilmTitleView from "./view/title.js";
+import NoFilmView from "./view/no-films.js";
 import FilmContainerView from "./view/container.js";
 import FilmCardView from "./view/card.js";
 import LoadButtonView from "./view/load-button.js";
@@ -100,6 +101,11 @@ const renderList = (listContainer, listCards) => {
   render(listContainer, filmComponent.getElement(), renderPosition.BEFOREEND);
 
   const filmList = filmComponent.getElement().querySelector(`.films-list`);
+
+  if (listCards.length === 0) {
+    render(filmList, new NoFilmView().getElement(), renderPosition.BEFOREEND);
+    return;
+  }
 
   render(filmList, filmTitle.getElement(), renderPosition.BEFOREEND);
   render(filmList, filmContainer.getElement(), renderPosition.BEFOREEND);
