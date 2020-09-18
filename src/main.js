@@ -39,7 +39,7 @@ render(siteMain, new SiteMenuView().getElement(), renderPosition.BEFOREEND);
 
 const siteNavigation = document.querySelector(`.main-navigation`);
 
-render(siteNavigation, new FilterView(filters).getElement(), `afterbegin`);
+render(siteNavigation, new FilterView(filters).getElement(), renderPosition.AFTERBEGIN);
 
 const renderCard = (cardListElement, card) => {
   const cardComponent = new FilmCardView(card);
@@ -62,8 +62,8 @@ const renderCard = (cardListElement, card) => {
   };
 
   const cardSelectors = [`.film-card__poster`, `.film-card__title`, `.film-card__comments`];
-  const cardElements = cardSelectors.map((element) => {
-    return cardComponent.getElement().querySelector(element);
+  const cardElements = cardSelectors.map((selector) => {
+    return cardComponent.getElement().querySelector(selector);
   });
 
   const popupDetailsContainer = popupComponent.getElement().querySelector(`.form-details__top-container`);
