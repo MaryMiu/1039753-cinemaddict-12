@@ -1,4 +1,8 @@
-export const createCommentContainer = (card) => {
+import {
+  createElement
+} from "../utils.js";
+
+const createCommentContainer = (card) => {
   const {
     comments
   } = card;
@@ -13,3 +17,26 @@ export const createCommentContainer = (card) => {
       </div>`
   );
 };
+
+export default class CommentContainer {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCommentContainer(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
