@@ -2,9 +2,9 @@ import {
   createElement
 } from "../utils.js";
 
-const createFilmContainer = () => {
+const createFilmTitle = () => {
   return (
-    `<div class="films-list__container"></div>`
+    `<h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>`
   );
 };
 export default class FilmContainer {
@@ -13,7 +13,7 @@ export default class FilmContainer {
   }
 
   getTemplate() {
-    return createFilmContainer();
+    return createFilmTitle();
   }
 
   getElement() {
