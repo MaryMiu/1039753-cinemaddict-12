@@ -1,6 +1,4 @@
-import {
-  createElement
-} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const checkProfileName = (number) => {
   if (number === 0) {
@@ -26,25 +24,13 @@ const createUserBar = (filters) => {
   `);
 };
 
-export default class UserBar {
+export default class UserBar extends AbstractView {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return createUserBar(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

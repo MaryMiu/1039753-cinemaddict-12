@@ -1,6 +1,6 @@
 import {
   getRandomInteger
-} from "../utils.js";
+} from "../utils/common.js";
 
 const MIN_COUNT = 100;
 const MAX_COUNT = 1000000;

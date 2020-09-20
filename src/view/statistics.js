@@ -1,7 +1,7 @@
+import AbstractView from "./abstract.js";
 import {
-  createElement,
   groupNumber
-} from "../utils.js";
+} from "../utils/card.js";
 
 const createStatistics = (number) => {
 
@@ -12,25 +12,13 @@ const createStatistics = (number) => {
   );
 };
 
-export default class Statistics {
+export default class Statistics extends AbstractView {
   constructor(number) {
+    super();
     this._number = number;
-    this._element = null;
   }
 
   getTemplate() {
     return createStatistics(this._number);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
