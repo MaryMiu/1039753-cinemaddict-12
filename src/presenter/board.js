@@ -17,11 +17,19 @@ import {
   renderPosition,
   remove
 } from "../utils/render.js";
+import {
+  sortDateUp,
+  sortRatingUp
+} from "../utils/card.js";
+import {
+  SortType
+} from "../constants.js";
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
+    this._currentSortType = SortType.DEFAULT;
 
     this._filmsComponent = new FilmsView();
     this._filmsListComponent = new FilmsListView();
@@ -32,10 +40,12 @@ export default class Board {
     this._loadButton = new LoadButtonView();
 
     this._handleLoadMoreClick = this._handleLoadMoreClick.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(filmCards) {
     this._filmsCards = filmCards.slice();
+    this._sourcedBoardCards = filmCards.slice();
 
     this._renderSort();
 
@@ -45,8 +55,34 @@ export default class Board {
     this._renderBoard();
   }
 
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortCards(sortType);
+    this._clearCardsList();
+    this._renderCardsList();
+  }
+
+  _sortCards(sortType) {
+    switch (sortType) {
+      case SortType.DATE_UP:
+        this._filmsCards.sort(sortDateUp);
+        break;
+      case SortType.RATING_UP:
+        this._filmsCards.sort(sortRatingUp);
+        break;
+      default:
+        this._filmsCards = this._sourcedBoardCards.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
   _renderSort() {
     render(this._boardContainer, this._sortComponent, renderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderCard(card) {
@@ -111,6 +147,11 @@ export default class Board {
   _renderLoadMoreButton() {
     render(this._filmsListComponent, this._loadButton, renderPosition.BEFOREEND);
     this._loadButton.setClickHandler(this._handleLoadMoreClick);
+  }
+
+  _clearCardsList() {
+    this._filmsContainerComponent.getElement().innerHTML = ``;
+    this._renderedCardsCount = CARDS_COUNT_PER_STEP;
   }
 
   _renderCardsList() {
