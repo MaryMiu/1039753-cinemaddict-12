@@ -6,20 +6,23 @@ export const renderPosition = {
 };
 
 export const render = (container, child, place) => {
-  if (container instanceof Abstract) {
-    container = container.getElement();
+  let containerElement = container;
+  let childElement = child;
+
+  if (containerElement instanceof Abstract) {
+    containerElement = container.getElement();
   }
 
-  if (child instanceof Abstract) {
-    child = child.getElement();
+  if (childElement instanceof Abstract) {
+    childElement = child.getElement();
   }
 
   switch (place) {
     case renderPosition.AFTERBEGIN:
-      container.prepend(child);
+      containerElement.prepend(childElement);
       break;
     case renderPosition.BEFOREEND:
-      container.append(child);
+      containerElement.append(childElement);
       break;
   }
 };
