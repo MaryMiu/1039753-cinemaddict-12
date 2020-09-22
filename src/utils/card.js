@@ -34,7 +34,7 @@ export const sortDateUp = (cardA, cardB) => {
     return weight;
   }
 
-  return cardA.releaseDate.getTime() - cardB.releaseDate.getTime();
+  return cardB.releaseDate.getTime() - cardA.releaseDate.getTime();
 };
 
 const getWeightForNullRating = (ratingA, ratingB) => {
@@ -60,7 +60,7 @@ export const sortRatingUp = (cardA, cardB) => {
     return weight;
   }
 
-  return cardA.rating - cardB.rating;
+  return cardB.rating - cardA.rating;
 };
 
 
