@@ -1,7 +1,7 @@
+import AbstractView from "./abstract.js";
 import {
-  createElement,
   humanizePopupReleaseDate
-} from "../utils.js";
+} from "../utils/card.js";
 
 const createCommentList = (card) => {
   const {
@@ -50,25 +50,13 @@ const createCommentList = (card) => {
   );
 };
 
-export default class CommentList {
+export default class CommentList extends AbstractView {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
   }
 
   getTemplate() {
     return createCommentList(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,22 +1,17 @@
 import {
   createElement
-} from "../utils.js";
+} from "../utils/render.js";
 
-const createFilmList = () => {
-  return (
-    `<section class="films">
-    <section class="films-list">
-    </section>
-  </section>`
-  );
-};
-export default class FilmList {
+export default class AbstractComponent {
   constructor() {
+    if (new.target === AbstractComponent) {
+      throw new Error(`Can't instantiate Abstract, only concrete one.`);
+    }
     this._element = null;
+    this._callback = {};
   }
-
   getTemplate() {
-    return createFilmList();
+    throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
   getElement() {
