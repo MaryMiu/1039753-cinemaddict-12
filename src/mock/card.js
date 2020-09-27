@@ -191,6 +191,8 @@ const generateGenre = () => {
   return genresList;
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateComments = () => {
   const count = getRandomInteger(0, MAX_COMMENTS_COUNT);
   const comments = new Array(count).fill().map(generateComment);
@@ -204,6 +206,7 @@ const generateMaxAge = () => {
 
 export const generateCard = () => {
   return {
+    id: generateId(),
     img: generateImg(),
     title: generateTitle(),
     rating: generateRating(),
