@@ -13,8 +13,7 @@ const MAX_MONTH = 11;
 const MIN_DAY = 1;
 const MAX_DAY = 31;
 const MAX_COMMENTS_COUNT = 5;
-const MAX_HOUR = 2;
-const MAX_MINUTES = 59;
+const MAX_MINUTES = 300;
 const MIN_DESCRIPTION_COUNT = 1;
 const MAX_DESCRIPTION_COUNT = 5;
 const MIN_WRITERS_COUNT = 1;
@@ -151,9 +150,8 @@ const generateReleaseDate = () => {
 };
 
 const generateRuntime = () => {
-  const hour = getRandomInteger(0, MAX_HOUR);
   const minutes = getRandomInteger(0, MAX_MINUTES);
-  return `${hour}h ${minutes}m`;
+  return minutes;
 };
 
 const generateCountry = () => {

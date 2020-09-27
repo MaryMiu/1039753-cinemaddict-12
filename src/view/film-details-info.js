@@ -1,7 +1,10 @@
 import AbstractView from "./abstract.js";
 import {
-  humanizeCardReleaseDate
+  formatFilmRuntime, formatFilmDate
 } from "../utils/card.js";
+import {
+  DateFormats
+} from "../constants.js";
 
 const createGenresListTemplate = (genres) => {
   return genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``);
@@ -43,13 +46,9 @@ const createPopup = (card) => {
 
   const genreLabel = genres.length > 1 ? `Genres` : `Genre`;
 
-  const formateDate = (humanizeDate) => {
-    return humanizeDate.replace(/(\w+)\s(\w+),/g, `$2 $1`);
-  };
-
   const genresTemplate = createGenresListTemplate(genres);
-  const humanizeDate = humanizeCardReleaseDate(releaseDate);
-  const currentDate = formateDate(humanizeDate);
+  const formatRuntime = formatFilmRuntime(runtime);
+  const formatDate = formatFilmDate(releaseDate, DateFormats.DMY);
   const controls = createControlTemplate(isWatchlist, isHistory, isFavorites);
 
   return (
@@ -91,11 +90,11 @@ const createPopup = (card) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${currentDate}</td>
+                <td class="film-details__cell">${formatDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${formatRuntime}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

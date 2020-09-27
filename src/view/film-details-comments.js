@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {
-  humanizePopupReleaseDate
+  formatCommentDate
 } from "../utils/card.js";
 
 const createCommentList = (card) => {
@@ -19,7 +19,7 @@ const createCommentList = (card) => {
         date
       } = comment;
 
-      const releaseDate = humanizePopupReleaseDate(date);
+      const releaseDate = formatCommentDate(date);
 
       let item = (`<li class="film-details__comment">
       <span class="film-details__comment-emoji">

@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {formatFilmRuntime} from "../utils/card.js";
 
 const MAX_SYMBOL_COUNT = 140;
 const cardSelectors = [`film-card__poster`, `film-card__title`, `film-card__comments`];
@@ -26,6 +27,7 @@ const createFilmCard = (card) => {
     description;
 
   const mainGenre = genres[0];
+  const formatRuntime = formatFilmRuntime(runtime);
   const releaseYear = releaseDate.getFullYear();
   const commentsCount = comments.length;
 
@@ -36,7 +38,7 @@ const createFilmCard = (card) => {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
           <span class="film-card__year">${releaseYear}</span>
-          <span class="film-card__duration">${runtime}</span>
+          <span class="film-card__duration">${formatRuntime}</span>
           <span class="film-card__genre">${mainGenre}</span>
       </p>
       <img src="./images/posters/${img}" alt="" class="film-card__poster">

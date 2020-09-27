@@ -3,3 +3,8 @@ export const SortType = {
   DATE_UP: `date-up`,
   RATING_UP: `raiting-up`
 };
+
+export const DateFormats = {
+  YEAR: `YYYY`,
+  DMY: `DD MMMM YYYY`,
+};
