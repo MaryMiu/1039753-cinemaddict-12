@@ -7,6 +7,21 @@ const createGenresListTemplate = (genres) => {
   return genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``);
 };
 
+const createControlTemplate = (isWatchlist, isHistory, isFavorites) => {
+  return (
+    `<section class="film-details__controls">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlist ? `checked` : ``}>
+        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isHistory ? `checked` : ``}>
+        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorites ? `checked` : ``}>
+        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+      </section>`
+  );
+};
+
 const createPopup = (card) => {
   const {
     img,
@@ -20,7 +35,10 @@ const createPopup = (card) => {
     country,
     genres,
     description,
-    maxAge
+    maxAge,
+    isWatchlist,
+    isHistory,
+    isFavorites
   } = card;
 
   const genreLabel = genres.length > 1 ? `Genres` : `Genre`;
@@ -32,11 +50,10 @@ const createPopup = (card) => {
   const genresTemplate = createGenresListTemplate(genres);
   const humanizeDate = humanizeCardReleaseDate(releaseDate);
   const currentDate = formateDate(humanizeDate);
+  const controls = createControlTemplate(isWatchlist, isHistory, isFavorites);
 
   return (
-    `<section class="film-details">
-    <form class="film-details__inner" action="" method="get">
-      <div class="form-details__top-container">
+    `<div class="form-details__top-container">
         <div class="film-details__close">
           <button class="film-details__close-btn" type="button">close</button>
         </div>
@@ -97,42 +114,19 @@ const createPopup = (card) => {
           </div>
         </div>
 
-        <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-          <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-          <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-          <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
-        </section>
-      </div>
-
-    </form>
-  </section>`
+        ${controls}
+      </div>`
   );
 };
 
-export default class Popup extends AbstractView {
-  constructor(card) {
+export default class DetailsInfo extends AbstractView {
+  constructor(data) {
     super();
-    this._card = card;
-    this._clickHandler = this._clickHandler.bind(this);
-  }
-
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
-  }
-
-  setClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+    this._data = data;
   }
 
   getTemplate() {
-    return createPopup(this._card);
+
+    return createPopup(this._data);
   }
 }
-

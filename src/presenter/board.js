@@ -6,11 +6,7 @@ import NoFilmsView from "../view/no-films-title.js";
 import FilmsView from "../view/films.js";
 import FilmsListView from "../view/films-list.js";
 import FilmsContainerView from "../view/films-container.js";
-import FilmCardView from "../view/card.js";
-import PopupView from "../view/card-details.js";
-import CommentContainerView from "../view/comment-container.js";
-import CommentListView from "../view/comment-list.js";
-import CommentNewView from "../view/comment-new.js";
+import CardPresenter from "./card.js";
 import LoadButtonView from "../view/load-button.js";
 import {
   render,
@@ -24,12 +20,16 @@ import {
 import {
   SortType
 } from "../constants.js";
+import {
+  updateItem
+} from "../utils/common.js";
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
+    this._cardPresenter = {};
 
     this._filmsComponent = new FilmsView();
     this._filmsListComponent = new FilmsListView();
@@ -41,6 +41,8 @@ export default class Board {
 
     this._handleLoadMoreClick = this._handleLoadMoreClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleCardChange = this._handleCardChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(filmCards) {
@@ -53,6 +55,18 @@ export default class Board {
     render(this._filmsComponent, this._filmsListComponent, renderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._cardPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleCardChange(updatedCard) {
+    this._filmsCards = updateItem(this._filmsCards, updatedCard);
+    this._sourcedBoardCards = updateItem(this._sourcedBoardCards, updatedCard);
+    this._cardPresenter[updatedCard.id].init(updatedCard);
   }
 
   _handleSortTypeChange(sortType) {
@@ -86,43 +100,9 @@ export default class Board {
   }
 
   _renderCard(card) {
-    const cardComponent = new FilmCardView(card);
-    const popupComponent = new PopupView(card);
-
-    const showPopup = () => {
-      document.body.appendChild(popupComponent.getElement());
-    };
-
-    const removePopup = () => {
-      document.body.removeChild(popupComponent.getElement());
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        removePopup();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    const popupDetailsContainer = popupComponent.getElement().querySelector(`.form-details__top-container`);
-    render(popupDetailsContainer, new CommentContainerView(card), renderPosition.BEFOREEND);
-
-    const popupDetailsList = popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    render(popupDetailsList, new CommentListView(card), renderPosition.BEFOREEND);
-    render(popupDetailsList, new CommentNewView(card), renderPosition.BEFOREEND);
-
-    cardComponent.setClickHandler(() => {
-      showPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    popupComponent.setClickHandler(() => {
-      removePopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(this._filmsContainerComponent, cardComponent, renderPosition.BEFOREEND);
+    const cardPresenter = new CardPresenter(this._filmsContainerComponent, this._handleCardChange, this._handleModeChange);
+    cardPresenter.init(card);
+    this._cardPresenter[card.id] = cardPresenter;
   }
 
   _renderCards(from, to) {
@@ -150,7 +130,9 @@ export default class Board {
   }
 
   _clearCardsList() {
-    this._filmsContainerComponent.getElement().innerHTML = ``;
+    Object
+      .values(this._cardPresenter)
+      .forEach((card) => card.destroy());
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
   }
 
