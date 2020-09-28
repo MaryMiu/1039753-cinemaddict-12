@@ -1,5 +1,6 @@
 import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/film-details.js";
+import {UserAction, UpdateType} from "../constants.js";
 
 import {
   render,
@@ -92,6 +93,8 @@ export default class Card {
 
   _handleAddToWatchClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign({},
             this._card, {
               isWatchlist: !this._card.isWatchlist
@@ -101,6 +104,8 @@ export default class Card {
   }
   _handleWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign({},
             this._card, {
               isHistory: !this._card.isHistory
@@ -111,6 +116,8 @@ export default class Card {
 
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign({},
             this._card, {
               isFavorites: !this._card.isFavorites

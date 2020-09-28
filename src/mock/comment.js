@@ -2,6 +2,8 @@ import {
   getRandomInteger
 } from "../utils/common.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateText = () => {
   const text = [
     `Interesting setting and a good cast`,
@@ -41,6 +43,7 @@ const generateDate = () => {
 
 export const generateComment = () => {
   return {
+    id: generateId(),
     text: generateText(),
     emotion: generateEmotion(),
     author: generateAuthor(),

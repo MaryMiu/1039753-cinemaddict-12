@@ -3,20 +3,20 @@ import {
   SortType
 } from "../constants.js";
 
-const createSort = () => {
+const createSort = (currentSortType) => {
   return (
     `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-    <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE_UP}">Sort by date</a></li>
-    <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING_UP}">Sort by rating</a></li>
+    <li><a href="#" class="sort__button ${currentSortType === SortType.DEFAULT ? `sort__button--active` : ``}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+    <li><a href="#" class="sort__button ${currentSortType === SortType.DATE_UP ? `sort__button--active` : ``}" data-sort-type="${SortType.DATE_UP}">Sort by date</a></li>
+    <li><a href="#" class="sort__button ${currentSortType === SortType.RATING_UP ? `sort__button--active` : ``}" data-sort-type="${SortType.RATING_UP}">Sort by rating</a></li>
   </ul>`
   );
 };
 
 export default class Sort extends AbstractView {
-  constructor() {
+  constructor(currentSortType) {
     super();
-
+    this._currentSortType = currentSortType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
@@ -35,6 +35,6 @@ export default class Sort extends AbstractView {
   }
 
   getTemplate() {
-    return createSort();
+    return createSort(this._currentSortType);
   }
 }

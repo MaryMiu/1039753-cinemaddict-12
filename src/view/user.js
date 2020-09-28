@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
 
+// eslint-disable-next-line no-unused-vars
 const checkProfileName = (number) => {
   if (number === 0) {
     return ``;
@@ -12,13 +13,11 @@ const checkProfileName = (number) => {
   }
 };
 
+// eslint-disable-next-line no-unused-vars
 const createUserBar = (filters) => {
-  const watchlistArray = filters.filter((filter) => filter.title === `Watchlist`);
-  const profileName = checkProfileName(watchlistArray[0].count);
-
   return (
     `<section class="header__profile profile">
-    <p class="profile__rating">${profileName}</p>
+    <p class="profile__rating">Novice</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>
   `);
