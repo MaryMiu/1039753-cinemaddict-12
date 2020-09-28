@@ -31,6 +31,7 @@ export default class Card {
     this._handleAddToWatchClick = this._handleAddToWatchClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleEmojiClick = this._handleEmojiClick.bind(this);
   }
 
   init(card) {
@@ -51,7 +52,7 @@ export default class Card {
     this._popupComponent.setAddToWatchClickHandler(this._handleAddToWatchClick);
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._popupComponent.setEmojiClickHandler();
+    this._popupComponent.setEmojiClickHandler(this._handleEmojiClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this._cardListContainer, this._cardComponent, renderPosition.BEFOREEND);
@@ -118,15 +119,23 @@ export default class Card {
     );
   }
 
+  _handleEmojiClick(evt) {
+    const label = evt.target.closest(`.film-details__emoji-label`);
+    const emoji = label.getAttribute(`for`).replace(`emoji-`, ``);
+    const containerEmoji = document.querySelector(`.film-details__add-emoji-label`);
+    containerEmoji.innerHTML = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+  }
+
   _showPopup() {
     render(this._popupContainer, this._popupComponent.getElement(), renderPosition.BEFOREEND);
+    this._popupComponent.restoreHandlers();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.ACTIVE;
   }
 
   _removePopup() {
-    this._popupContainer.removeChild(this._popupComponent.getElement());
+    remove(this._popupComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
