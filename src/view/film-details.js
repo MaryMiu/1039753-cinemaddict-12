@@ -20,7 +20,7 @@ const createPopup = (card) => {
 export default class Popup extends SmartView {
   constructor(card) {
     super();
-    this._data = Popup.parseCardToData(card);
+    this._data = card;
 
     this._closePopupСlickHandler = this._closePopupСlickHandler.bind(this);
 
@@ -54,11 +54,7 @@ export default class Popup extends SmartView {
   _emojiClickHandler(evt) {
     if (evt.target.closest(`.film-details__emoji-label`)) {
       evt.preventDefault();
-
-      const label = evt.target.closest(`.film-details__emoji-label`);
-      const emoji = label.getAttribute(`for`).replace(`emoji-`, ``);
-      const containerEmoji = document.querySelector(`.film-details__add-emoji-label`);
-      containerEmoji.innerHTML = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+      this._callback.clickEmoji(evt);
     }
   }
 
@@ -83,7 +79,7 @@ export default class Popup extends SmartView {
   }
 
   setEmojiClickHandler(callback) {
-    this._callback.emojiClick = callback;
+    this._callback.clickEmoji = callback;
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._emojiClickHandler);
   }
 
@@ -96,12 +92,12 @@ export default class Popup extends SmartView {
     this.setAddToWatchClickHandler(this._callback.clickAddToWatch);
     this.setWatchedClickHandler(this._callback.clickWatched);
     this.setFavoriteClickHandler(this._callback.clickFavorite);
-    this.setEmojiClickHandler(this._callback.emojiClick);
+    this.setEmojiClickHandler(this._callback.clickEmoji);
   }
 
-  static parseCardToData(card) {
-    return Object.assign({},
-        card
-    );
-  }
+  // static parseCardToData(card) {
+  //   return Object.assign({},
+  //       card
+  //   );
+  // }
 }
