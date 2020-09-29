@@ -149,6 +149,17 @@ const generateReleaseDate = () => {
   return currentTime;
 };
 
+const generateWatchingDate = () => {
+  const currentTime = new Date();
+  const year = getRandomInteger(MIN_YEAR, MAX_YEAR);
+  const month = getRandomInteger(MIN_MONTH, MAX_MONTH);
+  const day = getRandomInteger(MIN_DAY, MAX_DAY);
+
+  currentTime.setFullYear(year, month, day);
+
+  return currentTime;
+};
+
 const generateRuntime = () => {
   const minutes = getRandomInteger(0, MAX_MINUTES);
   return minutes;
@@ -212,6 +223,7 @@ export const generateCard = () => {
     writers: generateWriterName(),
     actors: generateActorsName(),
     releaseDate: generateReleaseDate(),
+    watchingDate: generateWatchingDate(),
     runtime: generateRuntime(),
     country: generateCountry(),
     genres: generateGenre(),

@@ -144,8 +144,8 @@ export default class Card {
     containerEmoji.innerHTML = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
   }
 
-  _handleDeleteCommentClick(evt) {
-    console.log(evt);
+  _handleDeleteCommentClick() {
+
   }
 
   _handleAddCommentKeydown(evt) {
