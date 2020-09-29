@@ -29,8 +29,23 @@ export default class Popup extends SmartView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
 
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
+    this._addCommentKeydownHandler = this._addCommentKeydownHandler.bind(this);
 
     this._setInnerHandlers();
+  }
+
+  _deleteCommentClickHandler(evt) {
+    if (evt.target.classList.contains(`film-details__comment-delete`)) {
+      evt.preventDefault();
+      this._callback.clickDeleteComment(evt);
+    }
+  }
+
+  _addCommentKeydownHandler(evt) {
+    if (evt.key === `Enter` && evt.ctrlKey) {
+      this._callback.keydownAddComment(evt);
+    }
   }
 
   _closePopupСlickHandler(evt) {
@@ -66,6 +81,16 @@ export default class Popup extends SmartView {
     }
   }
 
+  setAddCommentClickHandler(callback) {
+    this._callback.keydownAddComment = callback;
+    this.getElement().querySelector(`.film-details__inner`).addEventListener(`keydown`, this._addCommentKeydownHandler);
+  }
+
+  setDeleteCommentClickHandler(callback) {
+    this._callback.clickDeleteComment = callback;
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._deleteCommentClickHandler);
+  }
+
   setClosePopupClickHandler(callback) {
     this._callback.clickClosePopup = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopupСlickHandler);
@@ -93,8 +118,10 @@ export default class Popup extends SmartView {
 
   restoreHandlers() {
     this.setClosePopupClickHandler(this._callback.clickClosePopup);
-    this._setInnerHandlers();
     this.setEmojiClickHandler(this._callback.clickEmoji);
+    this.setDeleteCommentClickHandler(this._callback.clickDeleteComment);
+    this.setAddCommentClickHandler(this._callback.keydownAddComment);
+    this._setInnerHandlers();
   }
 
   static parseCardToData(card) {

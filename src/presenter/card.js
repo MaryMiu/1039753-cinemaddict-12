@@ -32,6 +32,8 @@ export default class Card {
     this._handleAddToWatchClick = this._handleAddToWatchClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
+    this._handleAddCommentKeydown = this._handleAddCommentKeydown.bind(this);
     this._handleEmojiClick = this._handleEmojiClick.bind(this);
     this._handleCardUpdate = this._handleCardUpdate.bind(this);
   }
@@ -51,6 +53,9 @@ export default class Card {
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     this._popupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
+    this._popupComponent.setEmojiClickHandler(this._handleEmojiClick);
+    this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
+    this._popupComponent.setAddCommentClickHandler(this._handleAddCommentKeydown);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this._cardListContainer, this._cardComponent, renderPosition.BEFOREEND);
@@ -137,6 +142,14 @@ export default class Card {
     const emoji = label.getAttribute(`for`).replace(`emoji-`, ``);
     const containerEmoji = document.querySelector(`.film-details__add-emoji-label`);
     containerEmoji.innerHTML = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+  }
+
+  _handleDeleteCommentClick(evt) {
+    console.log(evt);
+  }
+
+  _handleAddCommentKeydown(evt) {
+    evt.currentTarget.submit();
   }
 
   _showPopup() {
