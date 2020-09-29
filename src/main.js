@@ -46,18 +46,17 @@ render(siteHeader, new UserBar(filmsModel), renderPosition.BEFOREEND);
 const siteMenuComponent = new SiteMenuView();
 render(siteMain, siteMenuComponent, renderPosition.BEFOREEND);
 
-let statisticsComponent = null;
+const statisticsPresenter = new StatisticsPresenter(siteMain, filmsModel);
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.FILMS:
       boardPresenter.init();
-      remove(statisticsComponent);
+      statisticsPresenter.destroy();
       break;
     case MenuItem.STATISTICS:
       boardPresenter.destroy();
-      statisticsComponent = new StatisticsPresenter(siteMain, filmsModel);
-      statisticsComponent.init();
+      statisticsPresenter.init();
       break;
   }
 };

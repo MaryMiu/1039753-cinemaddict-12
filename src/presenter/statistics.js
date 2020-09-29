@@ -28,6 +28,11 @@ export default class Statistics {
     this._renderStatistics(null, this.watchedFilms, this._rank);
   }
 
+  destroy() {
+    remove(this._statisticsContainer);
+    remove(this._statisticsComponent);
+  }
+
   _renderStatistics(period = `all-time`, films, rank) {
     const prevStatisticsComponent = this._statisticsComponent;
 
