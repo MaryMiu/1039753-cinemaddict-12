@@ -33,6 +33,7 @@ export default class Card {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleEmojiClick = this._handleEmojiClick.bind(this);
+    this._handleCardUpdate = this._handleCardUpdate.bind(this);
   }
 
   init(card) {
@@ -50,10 +51,6 @@ export default class Card {
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     this._popupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
-    this._popupComponent.setAddToWatchClickHandler(this._handleAddToWatchClick);
-    this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._popupComponent.setEmojiClickHandler(this._handleEmojiClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this._cardListContainer, this._cardComponent, renderPosition.BEFOREEND);
@@ -87,8 +84,8 @@ export default class Card {
     this._showPopup();
   }
 
-  _handleClosePopupClick() {
-    this._removePopup();
+  _handleClosePopupClick(card) {
+    this._handleCardUpdate(card);
   }
 
   _handleAddToWatchClick() {
@@ -124,6 +121,15 @@ export default class Card {
             }
         )
     );
+  }
+
+  _handleCardUpdate(card) {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        card
+    );
+    this._removePopup();
   }
 
   _handleEmojiClick(evt) {
