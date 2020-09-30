@@ -32,7 +32,10 @@ export default class Card {
     this._handleAddToWatchClick = this._handleAddToWatchClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
+    this._handleAddCommentKeydown = this._handleAddCommentKeydown.bind(this);
     this._handleEmojiClick = this._handleEmojiClick.bind(this);
+    this._handleCardUpdate = this._handleCardUpdate.bind(this);
   }
 
   init(card) {
@@ -50,10 +53,9 @@ export default class Card {
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     this._popupComponent.setClosePopupClickHandler(this._handleClosePopupClick);
-    this._popupComponent.setAddToWatchClickHandler(this._handleAddToWatchClick);
-    this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._popupComponent.setEmojiClickHandler(this._handleEmojiClick);
+    this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
+    this._popupComponent.setAddCommentClickHandler(this._handleAddCommentKeydown);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this._cardListContainer, this._cardComponent, renderPosition.BEFOREEND);
@@ -87,8 +89,8 @@ export default class Card {
     this._showPopup();
   }
 
-  _handleClosePopupClick() {
-    this._removePopup();
+  _handleClosePopupClick(card) {
+    this._handleCardUpdate(card);
   }
 
   _handleAddToWatchClick() {
@@ -126,11 +128,28 @@ export default class Card {
     );
   }
 
+  _handleCardUpdate(card) {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        card
+    );
+    this._removePopup();
+  }
+
   _handleEmojiClick(evt) {
     const label = evt.target.closest(`.film-details__emoji-label`);
     const emoji = label.getAttribute(`for`).replace(`emoji-`, ``);
     const containerEmoji = document.querySelector(`.film-details__add-emoji-label`);
     containerEmoji.innerHTML = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+  }
+
+  _handleDeleteCommentClick() {
+
+  }
+
+  _handleAddCommentKeydown(evt) {
+    evt.currentTarget.submit();
   }
 
   _showPopup() {

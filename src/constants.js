@@ -27,3 +27,16 @@ export const FilterType = {
   HISTORY: `History`,
   FAVORITES: `Favorites`
 };
+
+export const MenuItem = {
+  FILMS: `FILMS`,
+  STATISTICS: `STATISTICS`
+};
+
+export const Period = {
+  ALLTIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
