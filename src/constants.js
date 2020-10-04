@@ -1,3 +1,5 @@
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const SortType = {
   DEFAULT: `DEFAULT`,
   DATE_UP: `DATE_UP`,

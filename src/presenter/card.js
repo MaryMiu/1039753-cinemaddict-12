@@ -1,5 +1,6 @@
 import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/film-details.js";
+import CommentPresenter from "./comment.js";
 import {UserAction, UpdateType} from "../constants.js";
 
 import {
@@ -155,6 +156,7 @@ export default class Card {
   _showPopup() {
     render(this._popupContainer, this._popupComponent.getElement(), renderPosition.BEFOREEND);
     this._popupComponent.restoreHandlers();
+    this._renderComments(this._card.comments);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.ACTIVE;
@@ -171,5 +173,15 @@ export default class Card {
       evt.preventDefault();
       this._removePopup();
     }
+  }
+
+  _renderComment(id) {
+    const commentsContainer = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
+    const commentPresenter = new CommentPresenter(commentsContainer);
+    commentPresenter.init(id);
+  }
+
+  _renderComments(comments) {
+    comments.forEach((comment) => this._renderComment(comment));
   }
 }
